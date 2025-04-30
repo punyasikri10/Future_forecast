@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;700&display=swap');
+*{
+    font-family: "Nunito", sans-serif;
+}
+body{
+    margin: 0;
+    padding: 0;
+}
+/* Navbar */
+#navbar{
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid black;
+    font-size: 20px;
+    position: fixed;
+    padding: 8px;
+    width: 100%;
+    background-color:rgb(174, 174, 174);
+    z-index: 2;
+    top: 0;
+}
+.nbox1 h1{
+    margin: 0;
+    font-size: 20px;
+    padding: 0;
+
+
+}
+#navbar a,#navbar i{
+    color: black;
+    margin: 20px;
+    text-decoration: none;
+    /* margin-top: 30px; */
+}
+#nhome{
+    color: yellow;
+}
+
+/* Second Page */
+
+.scon{
+    font-family: "Nunito",sans-serif;
+    text-align: center;
+    font-size: 38.32px;
+    /* margin: 0 0 48px; */
+    margin-top: 50px;
+}
+.scontainer{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 200px;
+}
+.sbox1{
+    width: 50%;
+}
+.sget h5{
+    font-size: 20px;
+    /* margin: 0 0 8px; */
+    margin: 15px;
+
+}
+.sget p{
+    font-size: 16px;
+    /* margin: 0 0 24px; */
+    margin: 15px;
+}
+.sinfo{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+.sitem{
+    display: flex;
+    align-items: center;
+}
+.sicon{
+    background-color:rgb(172, 172, 172);
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 15px;
+}
+.sicon img{
+    width: 32px;
+    height: 32px;
+}
+.sdetails h5{
+    margin: 5px;
+    font-size: 18px;
+    font-weight: bold;
+
+}
+.sdetails p{
+    margin: 0;
+    color: #555;
+}
+
+
+
+
+.sbox2 {
+    /* display: grid; */
+    width: 50%;  
+/* grid-template-columns: 325px 325px  ;   */
+/* grid-template-rows: 60x 60px 60px 60px;  */
+/* grid-template-areas: */
+/* "a b"    */
+/* "c c"    */
+/* "d d"    */
+/* "e e";   */
+height: 150px;
+gap: 25px;
+
+}
+#name,#email,#message,#subject::placeholder{
+font-size: 18px;}
+
+        
+#name {
+    /* grid-area: a; */
+    height: 58px;
+    width: 40%;
+    
+}
+
+#email {
+    /* grid-area: b; */
+    height: 58px;
+    width: 40%;
+    
+}
+
+#subject {
+    /* grid-area: c; */
+    height: 58px;
+    width: 81.5%;
+    margin-top: 20px;
+   
+}
+
+#message {
+    /* grid-area: d; */
+    height: 150px;
+    width: 81.5%;
+    margin-top: 20px;
+   
+}
+
+
+#submit {
+    /* grid-area: e; */
+    height: 58px; 
+    width: 83%;
+    background-color:rgb(172, 172, 172);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+}
+

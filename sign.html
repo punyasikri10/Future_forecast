@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyWatch - Weather Forecast App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: url('/api/placeholder/1600/900') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* Semi-transparent overlay to improve contrast */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(30, 40, 50, 0.65), rgba(20, 30, 40, 0.7));
+            z-index: -1;
+        }
+        
+        header {
+            background-color: rgba(25, 47, 89, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: #4dabf7;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+        
+        nav ul li a:hover {
+            color: #4dabf7;
+        }
+        
+        nav ul li a.active {
+            background-color: #4dabf7;
+            color: #192f59;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .signup-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .signup-header h1 {
+            font-size: 2rem;
+            color: #192f59;
+            margin-bottom: 0.5rem;
+        }
+        
+        .signup-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #4dabf7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .password-strength {
+            height: 5px;
+            width: 100%;
+            background: #eee;
+            margin-top: 0.5rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        
+        .password-suggestions {
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3793d5;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #999;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .divider span {
+            padding: 0 1rem;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .social-btn:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .social-btn img {
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: #4dabf7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .weather-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .weather-icon {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .cloud {
+            top: 10%;
+            left: 5%;
+            font-size: 6rem;
+        }
+        
+        .sun {
+            bottom: 15%;
+            right: 8%;
+            font-size: 8rem;
+        }
+        
+        .rain {
+            top: 20%;
+            right: 15%;
+            font-size: 4rem;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        footer {
+            background-color: rgba(25, 47, 89, 0.9);
+            color: #ddd;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            nav ul li {
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+            }
+            
+            .signup-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span>Future Forecast</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index2.html">Home</a></li>
+                <li><a href="index2.html">Forecast</a></li>
+                <li><a href="#">Maps</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#" class="active">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="signup-container">
+            <div class="signup-header">
+                <h1>Create Your Account</h1>
+                <p>Get personalized weather forecasts and alerts</p>
+            </div>
+            
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="City, State or ZIP code" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                        <button type="button" class="toggle-password" aria-label="Toggle password visibility">👁️</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="strength-meter"></div>
+                    </div>
+                    <div class="password-suggestions" id="password-suggestions">
+                        Use 8+ characters with a mix of letters, numbers & symbols
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Create Account</button>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="social-login">
+                    <button type="button" class="social-btn">
+                        Continue with Google
+                    </button>
+                    <button type="button" class="social-btn">
+                        Continue with Apple
+                    </button>
+                </div>
+                
+                <div class="login-link">
+                    Already have an account? <a href="#">Log In</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <div class="weather-bg">
+        <div class="weather-icon cloud">☁️</div>
+        <div class="weather-icon sun">☀️</div>
+        <div class="weather-icon rain">🌧️</div>
+    </div>
+    
+    <footer>
+        &copy; 2025 SkyWatch Weather App. All rights reserved.
+    </footer>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.querySelector('.toggle-password');
+        const passwordInput = document.querySelector('#password');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🔒';
+        });
+        
+        // Password strength meter
+        const strengthMeter = document.getElementById('strength-meter');
+        const passwordSuggestions = document.getElementById('password-suggestions');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            let suggestions = [];
+            
+            if (password.length > 0) {
+                // Check length
+                if (password.length < 8) {
+                    suggestions.push('Add more characters (at least 8)');
+                } else {
+                    strength += 25;
+                }
+                
+                // Check for mixed case
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+                    strength += 25;
+                } else {
+                    suggestions.push('Add both uppercase and lowercase letters');
+                }
+                
+                // Check for numbers
+                if (password.match(/\d/)) {
+                    strength += 25;
+                } else {
+                    suggestions.push('Add at least one number');
+                }
+                
+                // Check for special chars
+                if (password.match(/[^a-zA-Z\d]/)) {
+                    strength += 25;
+                } else {
+                    suggestions.push('Add at least one special character');
+                }
+            }
+            
+            strengthMeter.style.width = strength + '%';
+            
+            // Set color based on strength
+            if (strength < 25) {
+                strengthMeter.style.background = '#ff4d4d';
+            } else if (strength < 50) {
+                strengthMeter.style.background = '#ffa64d';
+            } else if (strength < 75) {
+                strengthMeter.style.background = '#ffff4d';
+            } else {
+                strengthMeter.style.background = '#4caf50';
+            }
+            
+            // Display suggestions
+            if (suggestions.length > 0 && password.length > 0) {
+                passwordSuggestions.textContent = suggestions.join(' • ');
+            } else if (password.length > 0) {
+                passwordSuggestions.textContent = 'Strong password!';
+            } else {
+                passwordSuggestions.textContent = 'Use 8+ characters with a mix of letters, numbers & symbols';
+            }
+        });
+        
+        // Form submission
+        const form = document.getElementById('signup-form');
+        const confirmPassword = document.getElementById('confirm-password');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate passwords match
+            if (passwordInput.value !== confirmPassword.value) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Submit form - in a real app, this would send data to your server
+            alert('Account created successfully! Welcome to Future_Forecast.');
+            form.reset();
+        });
+    </script>
+</body>
+</html>
